@@ -31,6 +31,11 @@ module.exports = function(app) {
             writetoDB(JSON.stringify(allNotes));
        });
 
+       app.delete("/api/notes/"+req.body.id, "utf-8", function(req, res){
+            
+            res.send("deleted note")
+       })
+
  
 
 
