@@ -27,21 +27,39 @@ module.exports = function(app) {
             //then we can push the req into the array
             allNotes.push(req.body)
             console.log(allNotes);
-
+            //call writetoDB to rewrite to db file 
             writetoDB(JSON.stringify(allNotes));
        });
 
-       app.delete("/api/notes/"+req.body.id, "utf-8", function(req, res){
-            
-            res.send("deleted note")
-       })
-
+      
  
 
 
         res.json(req.body);
         
     })
+
+
+    app.delete("/api/notes/:id", function(req, res){
+        let selectedID = req.params.id;
+           //when this route is called, we read the db file and then parse it into JSON object notation so we can maniuplate the objects within
+            fs.readFile("db/db.json", "utf-8", function(err, data){
+
+                if (err) throw err;
+
+                let allNotes = JSON.parse(data);
+                console.log(allNotes);
+                allNotes = allNotes.filter(note => note.id !== selectedID)
+                
+                let deletedNote = allNotes.filter(note => note.id === selectedID);
+                console.log(deletedNote);
+
+                writetoDB(JSON.stringify(allNotes));
+            });
+
+        res.json(req.body)
+
+       })
 
 
 }
