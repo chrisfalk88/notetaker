@@ -8,7 +8,14 @@ module.exports = function(app) {
 
 
     app.get("/api/notes", function(req, res){
-        res.json(db)
+        //change this to read and then return it in res.json
+
+        fs.readFile("db/db.json", 'utf-8', function (err, data){
+            if (err) throw err;
+            res.json(JSON.parse(data));
+        })
+
+       
     });
 
     app.post("/api/notes", function(req, res) {
@@ -28,6 +35,7 @@ module.exports = function(app) {
             allNotes.push(req.body)
             console.log(allNotes);
             //call writetoDB to rewrite to db file 
+            //removing json stringify
             writetoDB(JSON.stringify(allNotes));
        });
 
@@ -55,9 +63,11 @@ module.exports = function(app) {
                 console.log(deletedNote);
 
                 writetoDB(JSON.stringify(allNotes));
+
+                res.json(allNotes)
             });
 
-        res.json(req.body)
+        
 
        })
 
